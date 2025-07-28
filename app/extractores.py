@@ -139,7 +139,7 @@ def _extraer_ets(texto: str) -> Tuple[Dict[str, Any], pd.DataFrame, Dict[str, in
     encabezado["Grupo"] = "N/A"
     encabezado["Promedio General"] = None
 
-    # Estadísticas
+    # Estadísticas declaradas en el PDF (no siempre presentes)
     stats = {"inscritos": 0, "aprobados": 0, "reprobados": 0, "no_presentaron": 0}
     s = re.search(_PAT_STATS_ETS, texto)
     if s:
@@ -166,6 +166,20 @@ def _extraer_ets(texto: str) -> Tuple[Dict[str, Any], pd.DataFrame, Dict[str, in
         )
 
     df = pd.DataFrame(registros).sort_values("NumeroLista").reset_index(drop=True)
+
+    # Calcular estadísticas a partir de la información extraída
+    stats["inscritos"] = len(df)
+    stats["aprobados"] = int((df["Estatus"] == "Aprobado").sum())
+    stats["reprobados"] = int((df["Estatus"] == "Reprobado").sum())
+    stats["no_presentaron"] = int((df["Estatus"] == "NP").sum())
+
+    # Guardar estos valores en el encabezado para mantener compatibilidad con
+    # el resto de la aplicación.
+    encabezado["Aprobados"] = stats["aprobados"]
+    encabezado["Reprobados"] = stats["reprobados"]
+    encabezado["No Presentaron"] = stats["no_presentaron"]
+    encabezado["Total de Alumnos"] = stats["inscritos"]
+
     return encabezado, df, stats
 
 
