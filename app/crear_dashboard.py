@@ -80,15 +80,21 @@ def crear_dashboard():
 
             # === Función auxiliar ===
             def guardar_evaluacion(encabezado, df, tipo_eval):
+                # Calcular los totales a partir de la tabla para garantizar que
+                # siempre se registren, sin depender de que existan en el PDF.
+                total_aprobados = int((df["Estatus"] == "Aprobado").sum())
+                total_reprobados = int((df["Estatus"] == "Reprobado").sum())
+                total_np = int((df["Estatus"] == "NP").sum())
+
                 eval = Evaluacion(
                     id_dashboard=dashboard.id_dashboard,
                     tipo_evaluacion=tipo_eval,
                     licenciatura=encabezado.get("Licenciatura", "Desconocida"),
-                    grupo=encabezado.get("Grupo", "") if tipo_eval != "ets" else None,
+                    grupo=(encabezado.get("Grupo", "") if tipo_eval != "ets" else "N/A"),
                     promedio_general=encabezado.get("Promedio General", None),
-                    total_aprobados=encabezado.get("Aprobados", 0),
-                    total_reprobados=encabezado.get("Reprobados", 0),
-                    total_np=encabezado.get("No Presentaron", 0)
+                    total_aprobados=total_aprobados,
+                    total_reprobados=total_reprobados,
+                    total_np=total_np
                 )
                 db.add(eval)
                 db.commit()
