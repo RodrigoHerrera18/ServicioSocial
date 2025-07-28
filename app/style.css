@@ -1,0 +1,81 @@
+/* === Fondo general === */
+body {
+    background-color: #EFF2FF !important;
+}
+
+/* === Ocultar elementos de Streamlit === */
+#MainMenu, footer, header {
+    visibility: hidden;
+}
+
+section[data-testid="stSidebar"] {
+    display: none !important;
+}
+
+/* === Contenedores blancos con sombra === */
+div.block-container {
+    background-color: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* === Inputs y selectores === */
+input, textarea, select {
+    border-radius: 10px !important;
+    padding: 0.6rem !important;
+    border: 1px solid #cccccc !important;
+    width: 100% !important;
+    margin-bottom: 1rem;
+}
+
+/* === Botones principales === */
+button[kind="primary"] {
+    background-color: #6A0DAD !important;
+    border-radius: 12px !important;
+    color: white !important;
+    font-weight: bold;
+    padding: 0.5rem 1rem !important;
+    border: none !important;
+    transition: background-color 0.3s ease;
+}
+
+button[kind="primary"]:hover {
+    background-color: #4b088a !important;
+}
+
+/* === Dropzones por tipo === */
+div[data-testid="stFileUploader"] {
+    border: 2px dashed #6A0DAD !important;
+    border-radius: 12px;
+    background-color: #EDF1FF !important;
+    padding: 1.5rem !important;
+    margin-bottom: 1rem;
+}
+
+/* === Tabla de estudiantes === */
+[data-testid="stDataFrame"] {
+    border-radius: 12px !important;
+    margin-top: 1rem;
+    box-shadow: 0px 2px 12px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+/* === Alerta de error suave === */
+div.stAlert {
+    border-radius: 10px;
+    background-color: #FFECEC !important;
+    color: #C62828 !important;
+}
+
+/* === Títulos estilizados === */
+h1, h2, h3 {
+    color: #3C0D99;
+}
+
+/* === Checkbox ETS === */
+div[data-testid="stCheckbox"] {
+    margin-bottom: 1rem;
+}
