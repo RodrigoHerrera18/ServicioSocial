@@ -129,17 +129,22 @@ def ver_dashboards():
     # === Gráfico por origen ===
     st.markdown("### 📊 Histograma por Origen")
     df_bar = df_filtrado.copy()
-    # Contar alumnos por origen y estatus. Aseguramos incluir las tres
-    # categorías de origen para que siempre aparezcan en el gráfico,
-    # incluso si el filtro activo deja algún origen sin registros.
     origines = ["ordinario", "extraordinario", "ets"]
     estatuses = ["Aprobado", "Reprobado", "NP"]
+
+    # Convertir a categóricos para asegurar que aparezca la barra de ETS y todas
+    # las combinaciones de estatus aunque no existan registros en el filtro
+    df_bar["Origen"] = pd.Categorical(df_bar["Origen"], categories=origines, ordered=True)
+    df_bar["Estatus"] = pd.Categorical(df_bar["Estatus"], categories=estatuses, ordered=True)
+
     conteo = (
-        df_bar.groupby(["Origen", "Estatus"])  # type: ignore[arg-type]
+        df_bar
+        .groupby(["Origen", "Estatus"], observed=False)  # type: ignore[arg-type]
         .size()
-        .reindex(pd.MultiIndex.from_product([origines, estatuses],
-                                            names=["Origen", "Estatus"]),
-                 fill_value=0)
+        .reindex(
+            pd.MultiIndex.from_product([origines, estatuses], names=["Origen", "Estatus"]),
+            fill_value=0
+        )
         .reset_index(name="Cantidad")
     )
 
@@ -149,6 +154,7 @@ def ver_dashboards():
         y="Cantidad",
         color="Estatus",
         barmode="stack",
+        category_orders={"Origen": origines, "Estatus": estatuses},
         color_discrete_map={
             "Aprobado": "#00C853",
             "Reprobado": "#D50000",
