@@ -129,14 +129,26 @@ def ver_dashboards():
     # === Gráfico por origen ===
     st.markdown("### 📊 Histograma por Origen")
     df_bar = df_filtrado.copy()
-    df_bar["Contador"] = 1
+    # Contar alumnos por origen y estatus. Aseguramos incluir las tres
+    # categorías de origen para que siempre aparezcan en el gráfico,
+    # incluso si el filtro activo deja algún origen sin registros.
+    origines = ["ordinario", "extraordinario", "ets"]
+    estatuses = ["Aprobado", "Reprobado", "NP"]
+    conteo = (
+        df_bar.groupby(["Origen", "Estatus"])  # type: ignore[arg-type]
+        .size()
+        .reindex(pd.MultiIndex.from_product([origines, estatuses],
+                                            names=["Origen", "Estatus"]),
+                 fill_value=0)
+        .reset_index(name="Cantidad")
+    )
 
-    fig_bar = px.histogram(
-        df_bar,
+    fig_bar = px.bar(
+        conteo,
         x="Origen",
+        y="Cantidad",
         color="Estatus",
         barmode="stack",
-        histfunc="count",
         color_discrete_map={
             "Aprobado": "#00C853",
             "Reprobado": "#D50000",
