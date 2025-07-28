@@ -22,7 +22,11 @@ def ver_dashboards():
     opciones = {
         f"{d.titulo_personalizado} ({d.materia.nombre_materia})": d.id_dashboard for d in dashboards
     }
-    seleccion = st.selectbox("Selecciona un dashboard", list(opciones.keys()))
+    seleccion = st.selectbox(
+        "Selecciona un dashboard",
+        list(opciones.keys()),
+        key="seleccion_dashboard"
+    )
 
     if not seleccion:
         return
@@ -71,8 +75,16 @@ def ver_dashboards():
     grupos = df_completo["Grupo"].unique().tolist()
     carreras = df_completo["Licenciatura"].unique().tolist()
 
-    grupo_sel = col1.selectbox("Filtrar por grupo", ["Todos"] + grupos)
-    carrera_sel = col2.selectbox("Filtrar por licenciatura", ["Todos"] + carreras)
+    grupo_sel = col1.selectbox(
+        "Filtrar por grupo",
+        ["Todos"] + grupos,
+        key="filtro_grupo"
+    )
+    carrera_sel = col2.selectbox(
+        "Filtrar por licenciatura",
+        ["Todos"] + carreras,
+        key="filtro_carrera"
+    )
 
     df_filtrado = df_completo.copy()
     if grupo_sel != "Todos":
