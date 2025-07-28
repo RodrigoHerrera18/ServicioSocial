@@ -132,8 +132,21 @@ def ver_dashboards():
     origines = ["ordinario", "extraordinario", "ets"]
     estatuses = ["Aprobado", "Reprobado", "NP"]
 
-    # Convertir a categóricos para asegurar que se incluyan todas las
-    # combinaciones posibles aun cuando no existan registros para alguna.
+    # Normalizar valores por si provienen con mayúsculas o espacios
+    df_bar["Origen"] = df_bar["Origen"].str.lower().str.strip()
+    df_bar["Estatus"] = (
+        df_bar["Estatus"]
+        .str.strip()
+        .str.lower()
+        .map({
+            "aprobado": "Aprobado",
+            "reprobado": "Reprobado",
+            "np": "NP",
+        })
+        .fillna("NP")
+    )
+
+    # Convertir a categóricos para garantizar que aparezcan todas las barras
     df_bar["Origen"] = pd.Categorical(df_bar["Origen"], categories=origines, ordered=True)
     df_bar["Estatus"] = pd.Categorical(df_bar["Estatus"], categories=estatuses, ordered=True)
 
