@@ -133,6 +133,12 @@ def _extraer_ets(texto: str) -> Tuple[Dict[str, Any], pd.DataFrame, Dict[str, in
         m = re.search(pat, texto, re.IGNORECASE)
         encabezado[key] = m.group(1).strip() if m else ""
 
+    # Los archivos ETS no contienen información de grupo ni promedio general
+    # Para mantener consistencia con el modelo de datos, se asignan valores
+    # por defecto.
+    encabezado["Grupo"] = "N/A"
+    encabezado["Promedio General"] = None
+
     # Estadísticas
     stats = {"inscritos": 0, "aprobados": 0, "reprobados": 0, "no_presentaron": 0}
     s = re.search(_PAT_STATS_ETS, texto)

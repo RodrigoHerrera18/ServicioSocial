@@ -84,7 +84,7 @@ def crear_dashboard():
                     id_dashboard=dashboard.id_dashboard,
                     tipo_evaluacion=tipo_eval,
                     licenciatura=encabezado.get("Licenciatura", "Desconocida"),
-                    grupo=encabezado.get("Grupo", "") if tipo_eval != "ets" else None,
+                    grupo=(encabezado.get("Grupo", "") if tipo_eval != "ets" else "N/A"),
                     promedio_general=encabezado.get("Promedio General", None),
                     total_aprobados=encabezado.get("Aprobados", 0),
                     total_reprobados=encabezado.get("Reprobados", 0),
