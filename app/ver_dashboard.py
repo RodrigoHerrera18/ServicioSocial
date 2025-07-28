@@ -54,9 +54,11 @@ def ver_dashboards():
                 "Grupo": ev.grupo if ev.grupo else "N/A",
                 "Licenciatura": ev.licenciatura,
                 "Género": r.alumno.genero,
-                "Calificación": r.calificacion if r.calificacion is not None else "NP",
+                # Guardar la calificación como texto para evitar problemas al
+                # mostrarla en Streamlit. Si es None (NP) se guarda como "NP".
+                "Calificación": str(r.calificacion) if r.calificacion is not None else "NP",
                 "Estatus": r.estatus,
-                "Origen": ev.tipo_evaluacion
+                "Origen": ev.tipo_evaluacion.lower()
             })
         df = pd.DataFrame(datos)
         df_total.append(df)
@@ -127,14 +129,33 @@ def ver_dashboards():
     # === Gráfico por origen ===
     st.markdown("### 📊 Histograma por Origen")
     df_bar = df_filtrado.copy()
-    df_bar["Contador"] = 1
+    # Asegurar que las etiquetas estén en minúsculas y sin espacios
+    df_bar["Origen"] = df_bar["Origen"].str.strip().str.lower()
+    df_bar["Estatus"] = df_bar["Estatus"].str.strip()
 
-    fig_bar = px.histogram(
-        df_bar,
+    # Contar alumnos por origen y estatus. Incluimos combinaciones vacías para
+    # que siempre aparezcan las tres barras (ordinario, extraordinario, ets).
+    origines = ["ordinario", "extraordinario", "ets"]
+    estatuses = ["Aprobado", "Reprobado", "NP"]
+    index = pd.MultiIndex.from_product([origines, estatuses],
+                                       names=["Origen", "Estatus"])
+    conteo = (
+        df_bar.groupby(["Origen", "Estatus"])  # type: ignore[arg-type]
+        .size()
+        .reindex(index, fill_value=0)
+        .reset_index(name="Cantidad")
+    )
+
+    fig_bar = px.bar(
+        conteo,
         x="Origen",
+        y="Cantidad",
         color="Estatus",
         barmode="stack",
-        histfunc="count",
+        category_orders={
+            "Origen": ["ordinario", "extraordinario", "ets"],
+            "Estatus": ["Aprobado", "Reprobado", "NP"],
+        },
         color_discrete_map={
             "Aprobado": "#00C853",
             "Reprobado": "#D50000",
