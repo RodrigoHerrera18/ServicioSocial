@@ -26,10 +26,17 @@ if estado["logueado"]:
     st.success(f"Bienvenido, **{estado['nombre_usuario']}**")
 
     # === Menú lateral ===
-    menu_actual = st.sidebar.radio("Menú", ["Crear nuevo dashboard", "Ver dashboards", "Cerrar sesión"])
+    if "menu_lateral" not in st.session_state:
+        st.session_state.menu_lateral = "Crear nuevo dashboard"
+    menu_actual = st.sidebar.radio(
+        "Menú",
+        ["Crear nuevo dashboard", "Ver dashboards", "Cerrar sesión"],
+        key="menu_lateral"
+    )
 
     # === Redirección si se estableció desde otro módulo ===
     if estado.get("menu"):
+        st.session_state.menu_lateral = estado["menu"]
         menu_actual = estado["menu"]
         estado["menu"] = None  # Reiniciar el estado para futuras vistas
 
