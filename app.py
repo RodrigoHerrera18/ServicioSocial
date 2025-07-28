@@ -26,12 +26,21 @@ if estado["logueado"]:
     st.success(f"Bienvenido, **{estado['nombre_usuario']}**")
 
     # === Menú lateral ===
-    menu_actual = st.sidebar.radio("Menú", ["Crear nuevo dashboard", "Ver dashboards", "Cerrar sesión"])
+    # === Preparar valor seleccionado en el menú lateral ===
+    if "menu_lateral" not in st.session_state:
+        st.session_state.menu_lateral = "Crear nuevo dashboard"
 
-    # === Redirección si se estableció desde otro módulo ===
+    # Si se solicitó un cambio de menú desde otro módulo, aplicarlo antes de
+    # crear el widget para evitar modificar el estado luego de instanciarlo.
     if estado.get("menu"):
-        menu_actual = estado["menu"]
-        estado["menu"] = None  # Reiniciar el estado para futuras vistas
+        st.session_state.menu_lateral = estado["menu"]
+        estado["menu"] = None
+
+    menu_actual = st.sidebar.radio(
+        "Menú",
+        ["Crear nuevo dashboard", "Ver dashboards", "Cerrar sesión"],
+        key="menu_lateral",
+    )
 
     if menu_actual == "Crear nuevo dashboard":
         from app.crear_dashboard import crear_dashboard
