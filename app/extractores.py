@@ -125,7 +125,13 @@ _PAT_GENERAL_ETS = {
 }
 
 _PAT_STATS_ETS = r'INSCRITOS:\s*(\d+)\s+APROBADOS:\s*(\d+)\s+REPROBADOS:\s*(\d+)\s+NO PRESENTARON:\s*(\d+)'
-_PAT_ESTUDIANTE_ETS = r'(\d{10})\s+([A-Z\s]+?)\s+(NP|[0-9]+)\s+\(([^)]+)\)\s+(\d+)'
+_PAT_ESTUDIANTE_ETS = (
+    r"(\d+)\s+"         # Numero de lista
+    r"(\d{10})\s+"     # Boleta
+    r"([A-ZÁÉÍÓÚÑáéíóúñ\s]+?)\s+"  # Nombre con posibles acentos
+    r"(NP|[0-9]+)\s+"   # Calificación o NP
+    r"\(([^)]+)\)"     # Texto entre paréntesis (opcional)
+)
 
 def _extraer_ets(texto: str) -> Tuple[Dict[str, Any], pd.DataFrame, Dict[str, int]]:
     encabezado: Dict[str, Any] = {}
@@ -152,8 +158,11 @@ def _extraer_ets(texto: str) -> Tuple[Dict[str, Any], pd.DataFrame, Dict[str, in
 
     # Estudiantes
     registros = []
-    for boleta, nombre, calif, _, num_lista in re.findall(_PAT_ESTUDIANTE_ETS, texto):
-        calif_val = calif if calif == "NP" else int(calif)
+    for num_lista, boleta, nombre, calif, _ in re.findall(_PAT_ESTUDIANTE_ETS, texto):
+        try:
+            calif_val = int(calif)
+        except ValueError:
+            calif_val = "NP"
         registros.append(
             {
                 "Boleta": boleta,
