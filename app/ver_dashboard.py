@@ -54,7 +54,9 @@ def ver_dashboards():
                 "Grupo": ev.grupo if ev.grupo else "N/A",
                 "Licenciatura": ev.licenciatura,
                 "Género": r.alumno.genero,
-                "Calificación": r.calificacion if r.calificacion is not None else "NP",
+                # Guardar la calificación como texto para evitar problemas al
+                # mostrarla en Streamlit. Si es None (NP) se guarda como "NP".
+                "Calificación": str(r.calificacion) if r.calificacion is not None else "NP",
                 "Estatus": r.estatus,
                 "Origen": ev.tipo_evaluacion
             })
