@@ -1,6 +1,6 @@
 /* === Fondo general === */
 body {
-    background-color: #EFF2FF !important;
+    background-color: #FFFFFF !important;
 }
 
 /* === Ocultar elementos de Streamlit === */
@@ -20,6 +20,7 @@ div.block-container {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
     margin-top: 1rem;
     margin-bottom: 2rem;
+    max-width: 95%;
 }
 
 /* === Inputs y selectores === */
@@ -32,27 +33,36 @@ input, textarea, select {
 }
 
 /* === Botones principales === */
-button[kind="primary"] {
-    background-color: #6A0DAD !important;
-    border-radius: 12px !important;
-    color: white !important;
+button[kind="primary"], button.st-button {
+    background-color: #3C0D99 !important;
+    border-radius: 10px !important;
+    color: #FFFFFF !important;
     font-weight: bold;
     padding: 0.5rem 1rem !important;
     border: none !important;
     transition: background-color 0.3s ease;
 }
 
-button[kind="primary"]:hover {
-    background-color: #4b088a !important;
+button[kind="primary"]:hover, button.st-button:hover {
+    background-color: #2c086f !important;
 }
 
 /* === Dropzones por tipo === */
 div[data-testid="stFileUploader"] {
-    border: 2px dashed #6A0DAD !important;
-    border-radius: 12px;
-    background-color: #EDF1FF !important;
+    border: 2px dashed #3C0D99 !important;
+    border-radius: 10px;
     padding: 1.5rem !important;
     margin-bottom: 1rem;
+}
+
+div[data-testid="stFileUploader"]:nth-of-type(1) {
+    background-color: #F4F4FF !important;
+}
+div[data-testid="stFileUploader"]:nth-of-type(2) {
+    background-color: #E6FFF4 !important;
+}
+div[data-testid="stFileUploader"]:nth-of-type(3) {
+    background-color: #FFF0F0 !important;
 }
 
 /* === Tabla de estudiantes === */
@@ -61,6 +71,11 @@ div[data-testid="stFileUploader"] {
     margin-top: 1rem;
     box-shadow: 0px 2px 12px rgba(0,0,0,0.05);
     overflow: hidden;
+}
+
+[data-testid="stDataFrame"] thead th {
+    background-color: #3C0D99 !important;
+    color: white !important;
 }
 
 /* === Alerta de error suave === */
@@ -73,7 +88,54 @@ div.stAlert {
 /* === Títulos estilizados === */
 h1, h2, h3 {
     color: #3C0D99;
+    font-weight: bold;
 }
+
+/* Subtexto descriptivo */
+.subtext {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+/* Encabezado de logos */
+.header-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.header-logos img {
+    width: 50px;
+    height: 50px;
+    margin: 0 10px;
+}
+
+/* Pie de página */
+.footer {
+    text-align: center;
+    color: #6c757d;
+    font-size: 14px;
+    margin-top: 40px;
+}
+
+.footer img {
+    width: 40px;
+    height: 40px;
+    margin: 0 10px;
+}
+
+/* Tarjetas métricas */
+div[data-testid="metric-container"] {
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 1rem;
+}
+
+/* Colores institucionales */
+.mujer { color: #F81C85; }
+.positivo { color: #00C48C; }
+.negativo { color: #FF4C61; }
 
 /* === Checkbox ETS === */
 div[data-testid="stCheckbox"] {

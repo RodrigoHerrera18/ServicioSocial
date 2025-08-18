@@ -13,7 +13,10 @@ def crear_dashboard():
     db = SessionLocal()
 
     st.markdown("## 📊 Crear nuevo Dashboard")
-    st.markdown("Carga los archivos oficiales para generar el análisis académico.")
+    st.markdown(
+        "<p class='subtext'>Carga los archivos oficiales para generar el análisis académico.</p>",
+        unsafe_allow_html=True,
+    )
 
     # El checkbox se coloca fuera del formulario para permitir que Streamlit
     # re-renderice la interfaz inmediatamente cuando se seleccione y así
