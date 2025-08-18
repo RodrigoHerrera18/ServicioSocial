@@ -15,20 +15,28 @@ def crear_dashboard():
     st.markdown("## 📊 Crear nuevo Dashboard")
     st.markdown("Carga los archivos oficiales para generar el análisis académico.")
 
+    # El checkbox se coloca fuera del formulario para permitir que Streamlit
+    # re-renderice la interfaz inmediatamente cuando se seleccione y así
+    # habilitar el campo de carga del archivo ETS sin necesidad de enviar el
+    # formulario primero.
+    agregar_ets = st.checkbox("¿Agregar archivo ETS?")
+
     with st.form("form_dashboard", clear_on_submit=False):
         # === Configuración del Dashboard ===
         st.markdown("### ✏️ Configuración del Dashboard")
-        titulo = st.text_input("Título del Dashboard", placeholder="Ej. Análisis y Diseño de Algoritmos — 2025-2")
+        titulo = st.text_input(
+            "Título del Dashboard",
+            placeholder="Ej. Análisis y Diseño de Algoritmos — 2025-2",
+        )
 
         # === Subida de archivos ===
         st.markdown("### 📤 Sube los archivos en formato PDF")
 
         archivo_ordinario = st.file_uploader("📘 Ordinario (obligatorio)", type="pdf")
         archivo_extra = st.file_uploader("🟢 Extraordinario (obligatorio)", type="pdf")
-        agregar_ets = st.checkbox("¿Agregar archivo ETS?")
-        archivo_ets = None
-        if agregar_ets:
-            archivo_ets = st.file_uploader("🔴 ETS (opcional)", type="pdf")
+        archivo_ets = (
+            st.file_uploader("🔴 ETS (opcional)", type="pdf") if agregar_ets else None
+        )
 
         submitted = st.form_submit_button("🔒 Generar Dashboard")
 
