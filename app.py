@@ -8,15 +8,26 @@ from app.db import init_db
 # === Inicializa la base de datos (crear tablas si no existen) ===
 init_db()
 
+# === Configurar página ===
+st.set_page_config(page_title="Dashboards Académicos", layout="wide")
+
 # === Cargar CSS externo ===
 with open("app/style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# === Configurar página ===
-st.set_page_config(page_title="Dashboards Académicos", layout="centered")
-
 # === Obtener estado de sesión ===
 estado = obtener_estado()
+
+# === Encabezado institucional ===
+st.markdown(
+    """
+    <div class="header-logos">
+        <img src="app/assets/ipn.png" alt="IPN">
+        <img src="app/assets/escom.png" alt="ESCOM">
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 # === Encabezado principal ===
 st.markdown("## 📊 Sistema de Dashboards Académicos")
@@ -57,3 +68,17 @@ else:
         mostrar_login()
     else:
         mostrar_registro()
+
+# === Pie de página ===
+st.markdown(
+    """
+    <div class="footer">
+        <div class="header-logos">
+            <img src="app/assets/ipn.png" alt="IPN">
+            <img src="app/assets/escom.png" alt="ESCOM">
+        </div>
+        <p>Sistema de análisis académico - ESCOM IPN<br>Instituto Politécnico Nacional © 2025</p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
