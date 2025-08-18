@@ -5,14 +5,21 @@ import pandas as pd
 import plotly.express as px
 from sqlalchemy.orm import joinedload
 from app.db import SessionLocal, Dashboard, Evaluacion, Alumno, Resultado, Materia
-from app.session_state import obtener_estado
+from app.session_state import obtener_estado, cerrar_sesion
 
 
 def ver_dashboards():
     estado = obtener_estado()
     db = SessionLocal()
 
-    st.markdown("## Dashboards disponibles")
+    top_left, top_right = st.columns([8, 1])
+    with top_left:
+        st.markdown("## Dashboards disponibles")
+    with top_right:
+        if st.button("🔒 Cerrar sesión"):
+            cerrar_sesion()
+            st.rerun()
+
     if st.button("➕ Crear nuevo dashboard"):
         estado["menu"] = "Crear nuevo dashboard"
         st.rerun()
@@ -101,30 +108,40 @@ def ver_dashboards():
     aprobados = len(df_filtrado[df_filtrado["Estatus"] == "Aprobado"])
     reprobados = len(df_filtrado[df_filtrado["Estatus"] == "Reprobado"])
     np = len(df_filtrado[df_filtrado["Estatus"] == "NP"])
+    calificaciones = pd.to_numeric(df_filtrado["Calificación"], errors="coerce")
+    promedio = calificaciones.mean()
 
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Total evaluados", total)
-    col2.metric("Aprobados", f"{aprobados} ({aprobados / total:.0%})" if total else "0")
-    col3.metric("No presentaron", f"{np} ({np / total:.0%})" if total else "0")
+    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+    kpi1.metric("Total evaluados", total)
+    kpi2.metric("Aprobados", f"{aprobados} ({aprobados / total:.0%})" if total else "0")
+    kpi3.metric("No presentaron", f"{np} ({np / total:.0%})" if total else "0")
+    kpi4.metric("🎓 Promedio General", f"{promedio:.2f}" if not pd.isna(promedio) else "N/A")
 
-    # === KPI por género ===
-    st.markdown("### 👩‍🎓 Desglose por género")
+    # === Histograma por género ===
+    st.markdown("### 👩‍🎓 Estatus académico por género")
 
-    for genero in ["Mujer", "Hombre", "Desconocido"]:
+    generos = ["Mujer", "Hombre", "Desconocido"]
+    cols_genero = st.columns(3)
+    for genero, col in zip(generos, cols_genero):
         subset = df_filtrado[df_filtrado["Género"] == genero]
-        total_gen = len(subset)
-        if total_gen == 0:
-            continue
-        aprobados_g = len(subset[subset["Estatus"] == "Aprobado"])
-        reprobados_g = len(subset[subset["Estatus"] == "Reprobado"])
-        np_g = len(subset[subset["Estatus"] == "NP"])
-
-        st.markdown(f"**{genero}**")
-        st.markdown(
-            f"- ✅ Aprobados: {aprobados_g} ({aprobados_g / total_gen:.0%})\n"
-            f"- ❌ Reprobados: {reprobados_g} ({reprobados_g / total_gen:.0%})\n"
-            f"- ⚠️ NP: {np_g} ({np_g / total_gen:.0%})"
+        conteo = (
+            subset["Estatus"].value_counts().reindex(["Aprobado", "Reprobado", "NP"], fill_value=0)
+            .reset_index()
         )
+        conteo.columns = ["Estatus", "Cantidad"]
+        fig_gen = px.bar(
+            conteo,
+            x="Estatus",
+            y="Cantidad",
+            title=genero,
+            color="Estatus",
+            color_discrete_map={
+                "Aprobado": "#00C853",
+                "Reprobado": "#D50000",
+                "NP": "#FFD600",
+            },
+        )
+        col.plotly_chart(fig_gen, use_container_width=True)
 
     # === Gráfica de género ===
     st.markdown("### 🧩 Distribución por Género")
@@ -179,4 +196,11 @@ def ver_dashboards():
 
     # === Tabla final ===
     st.markdown("### 📋 Tabla General de Estudiantes")
+    csv = df_filtrado.to_csv(index=False).encode("utf-8")
+    st.download_button(
+        "📥 Descargar CSV",
+        data=csv,
+        file_name="estudiantes_filtrados.csv",
+        mime="text/csv",
+    )
     st.dataframe(df_filtrado, use_container_width=True)
