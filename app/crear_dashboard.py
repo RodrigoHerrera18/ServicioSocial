@@ -12,7 +12,7 @@ def crear_dashboard():
     estado = obtener_estado()
     db = SessionLocal()
 
-    st.markdown("## 📊 Crear nuevo Dashboard")
+    st.markdown("## Crear nuevo Dashboard")
     st.markdown("Carga los archivos oficiales para generar el análisis académico.")
 
     # El checkbox se coloca fuera del formulario para permitir que Streamlit
@@ -32,11 +32,19 @@ def crear_dashboard():
         # === Subida de archivos ===
         st.markdown("### 📤 Sube los archivos en formato PDF")
 
-        archivo_ordinario = st.file_uploader("📘 Ordinario (obligatorio)", type="pdf")
-        archivo_extra = st.file_uploader("🟢 Extraordinario (obligatorio)", type="pdf")
-        archivo_ets = (
-            st.file_uploader("🔴 ETS (opcional)", type="pdf") if agregar_ets else None
-        )
+        st.markdown('<div class="upload-card ordinario">📘 Ordinario (obligatorio)', unsafe_allow_html=True)
+        archivo_ordinario = st.file_uploader("", type="pdf", label_visibility="collapsed")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        st.markdown('<div class="upload-card extraordinario">🟢 Extraordinario (obligatorio)', unsafe_allow_html=True)
+        archivo_extra = st.file_uploader("", type="pdf", label_visibility="collapsed")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        archivo_ets = None
+        if agregar_ets:
+            st.markdown('<div class="upload-card ets">🔴 ETS (opcional)', unsafe_allow_html=True)
+            archivo_ets = st.file_uploader("", type="pdf", label_visibility="collapsed")
+            st.markdown('</div>', unsafe_allow_html=True)
 
         submitted = st.form_submit_button("🔒 Generar Dashboard")
 

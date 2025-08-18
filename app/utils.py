@@ -40,17 +40,17 @@ def obtener_estatus(calificacion: str | float) -> str:
 
 def color_por_estatus(estatus: str) -> str:
     return {
-        "Aprobado": "#00C853",     # verde
-        "Reprobado": "#D50000",    # rojo
-        "NP": "#9E9E9E"            # gris
+        "Aprobado": "#00c853",     # verde
+        "Reprobado": "#d50000",    # rojo
+        "NP": "#666666"            # gris oscuro
     }.get(estatus, "#000000")
 
 
 def color_por_genero(genero: str) -> str:
     return {
-        "Mujer": "#F48FB1",        # rosa
-        "Hombre": "#42A5F5",       # azul
-        "Desconocido": "#BDBDBD"
+        "Mujer": "#e6007e",        # magenta IPN
+        "Hombre": "#3f0071",       # morado IPN
+        "Desconocido": "#666666"
     }.get(genero, "#000000")
 
 import gender_guesser.detector as gender

@@ -137,7 +137,12 @@ def ver_dashboards():
         values="Cantidad",
         title="Distribución de Género",
         hole=0.4,
-        color_discrete_sequence=["#F48FB1", "#42A5F5", "#BDBDBD"]
+        color="Género",
+        color_discrete_map={
+            "Mujer": "#e6007e",
+            "Hombre": "#3f0071",
+            "Desconocido": "#666666",
+        },
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -170,13 +175,24 @@ def ver_dashboards():
         barmode="stack",
         category_orders={"Origen": origines, "Estatus": estatuses},
         color_discrete_map={
-            "Aprobado": "#00C853",
-            "Reprobado": "#D50000",
-            "NP": "#9E9E9E"
+            "Aprobado": "#00c853",
+            "Reprobado": "#d50000",
+            "NP": "#666666",
         }
     )
     st.plotly_chart(fig_bar, use_container_width=True)
 
     # === Tabla final ===
     st.markdown("### 📋 Tabla General de Estudiantes")
-    st.dataframe(df_filtrado, use_container_width=True)
+
+    def estilo_estatus(val):
+        if val == "Aprobado":
+            return "background-color: #e8f5e9; color: #00c853; font-weight:600;"
+        if val == "Reprobado":
+            return "background-color: #ffebee; color: #d50000; font-weight:600;"
+        if val == "NP":
+            return "background-color: #eeeeee; color: #666666; font-weight:600;"
+        return ""
+
+    df_style = df_filtrado.style.applymap(estilo_estatus, subset=["Estatus"])
+    st.dataframe(df_style, use_container_width=True)

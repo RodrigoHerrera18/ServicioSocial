@@ -19,7 +19,18 @@ st.set_page_config(page_title="Dashboards Académicos", layout="centered")
 estado = obtener_estado()
 
 # === Encabezado principal ===
-st.markdown("## 📊 Sistema de Dashboards Académicos")
+st.markdown(
+    """
+<header class=\"ipn-header\">
+  <div class=\"logos-container\">
+    <img src=\"app/assets/ipn.png\" alt=\"IPN\" class=\"logo-ipn\" />
+    <img src=\"app/assets/escom.png\" alt=\"ESCOM\" class=\"logo-escom\" />
+  </div>
+  <h2>📊 Sistema de Dashboards Académicos</h2>
+</header>
+""",
+    unsafe_allow_html=True,
+)
 
 if estado["logueado"]:
     # === Usuario logueado ===

@@ -6,6 +6,17 @@ from app.utils import hash_password, verificar_password, correo_valido
 from app.session_state import iniciar_sesion
 
 def mostrar_login():
+    st.markdown(
+        """
+    <div class="login-page">
+      <div class="logos-container">
+        <img src="app/assets/ipn.png" alt="IPN" class="logo-ipn" />
+        <img src="app/assets/escom.png" alt="ESCOM" class="logo-escom" />
+      </div>
+    """,
+        unsafe_allow_html=True,
+    )
+
     st.subheader("🔒 Iniciar sesión")
 
     correo = st.text_input("Correo electrónico", placeholder="tucorreo@dominio.com")
@@ -26,8 +37,30 @@ def mostrar_login():
         else:
             st.error("❌ Correo o contraseña incorrectos.")
 
+    st.markdown(
+        """
+      <div class="login-footer">
+        <p>Sistema de análisis académico - ESCOM IPN</p>
+        <p>Instituto Politécnico Nacional © 2025</p>
+      </div>
+    </div>
+    """,
+        unsafe_allow_html=True,
+    )
+
 
 def mostrar_registro():
+    st.markdown(
+        """
+    <div class="login-page">
+      <div class="logos-container">
+        <img src="app/assets/ipn.png" alt="IPN" class="logo-ipn" />
+        <img src="app/assets/escom.png" alt="ESCOM" class="logo-escom" />
+      </div>
+    """,
+        unsafe_allow_html=True,
+    )
+
     st.subheader("📝 Registro de nuevo usuario")
 
     nombre = st.text_input("Nombre completo", placeholder="Ej. Rodrigo Pérez")
@@ -62,3 +95,14 @@ def mostrar_registro():
         db.commit()
 
         st.success("✅ Usuario registrado exitosamente. Ahora puedes iniciar sesión.")
+
+    st.markdown(
+        """
+      <div class="login-footer">
+        <p>Sistema de análisis académico - ESCOM IPN</p>
+        <p>Instituto Politécnico Nacional © 2025</p>
+      </div>
+    </div>
+    """,
+        unsafe_allow_html=True,
+    )
