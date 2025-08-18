@@ -40,9 +40,9 @@ def obtener_estatus(calificacion: str | float) -> str:
 
 def color_por_estatus(estatus: str) -> str:
     return {
-        "Aprobado": "#00C853",     # verde
-        "Reprobado": "#D50000",    # rojo
-        "NP": "#9E9E9E"            # gris
+        "Aprobado": "#A0C4FF",     # azul claro
+        "NP": "#5E60CE",          # morado medio
+        "Reprobado": "#7209B7"    # morado oscuro
     }.get(estatus, "#000000")
 
 
