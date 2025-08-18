@@ -40,6 +40,10 @@ def crear_dashboard():
 
         submitted = st.form_submit_button("🔒 Generar Dashboard")
 
+    if st.button("📋 Ver dashboards existentes"):
+        estado["menu"] = "Ver dashboards"
+        st.rerun()
+
     if submitted:
         errores = []
         if not titulo:
