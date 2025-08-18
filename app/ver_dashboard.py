@@ -6,6 +6,7 @@ import plotly.express as px
 from sqlalchemy.orm import joinedload
 from app.db import SessionLocal, Dashboard, Evaluacion, Alumno, Resultado, Materia
 from app.session_state import obtener_estado, cerrar_sesion
+from app.utils import color_por_estatus
 
 
 def ver_dashboards():
@@ -119,13 +120,14 @@ def ver_dashboards():
 
     # === Histograma por género ===
     st.markdown("### 👩‍🎓 Estatus académico por género")
+    estatus_colors = {e: color_por_estatus(e) for e in ["Aprobado", "NP", "Reprobado"]}
 
     generos = ["Mujer", "Hombre", "Desconocido"]
     cols_genero = st.columns(3)
     for genero, col in zip(generos, cols_genero):
         subset = df_filtrado[df_filtrado["Género"] == genero]
         conteo = (
-            subset["Estatus"].value_counts().reindex(["Aprobado", "Reprobado", "NP"], fill_value=0)
+            subset["Estatus"].value_counts().reindex(["Aprobado", "NP", "Reprobado"], fill_value=0)
             .reset_index()
         )
         conteo.columns = ["Estatus", "Cantidad"]
@@ -135,11 +137,7 @@ def ver_dashboards():
             y="Cantidad",
             title=genero,
             color="Estatus",
-            color_discrete_map={
-                "Aprobado": "#00C853",
-                "Reprobado": "#D50000",
-                "NP": "#FFD600",
-            },
+            color_discrete_map=estatus_colors,
         )
         col.plotly_chart(fig_gen, use_container_width=True)
 
@@ -162,7 +160,7 @@ def ver_dashboards():
     st.markdown("### 📊 Histograma por Origen")
     df_bar = df_filtrado.copy()
     origines = ["ordinario", "extraordinario", "ets"]
-    estatuses = ["Aprobado", "Reprobado", "NP"]
+    estatuses = ["Aprobado", "NP", "Reprobado"]
 
     # Normalizar valores por si provienen con mayúsculas o espacios
     df_bar["Origen"] = df_bar["Origen"].str.lower().str.strip()
@@ -186,11 +184,7 @@ def ver_dashboards():
         color="Estatus",
         barmode="stack",
         category_orders={"Origen": origines, "Estatus": estatuses},
-        color_discrete_map={
-            "Aprobado": "#00C853",
-            "Reprobado": "#D50000",
-            "NP": "#9E9E9E"
-        }
+        color_discrete_map=estatus_colors
     )
     st.plotly_chart(fig_bar, use_container_width=True)
 
