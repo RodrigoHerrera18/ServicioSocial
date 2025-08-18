@@ -12,7 +12,7 @@ def ver_dashboards():
     estado = obtener_estado()
     db = SessionLocal()
 
-    st.markdown("## 📋 Dashboards disponibles")
+    st.markdown("## Dashboards disponibles")
     if st.button("➕ Crear nuevo dashboard"):
         estado["menu"] = "Crear nuevo dashboard"
         st.rerun()
@@ -119,7 +119,7 @@ def ver_dashboards():
         reprobados_g = len(subset[subset["Estatus"] == "Reprobado"])
         np_g = len(subset[subset["Estatus"] == "NP"])
 
-        st.markdown(f"**{genero}s**")
+        st.markdown(f"**{genero}**")
         st.markdown(
             f"- ✅ Aprobados: {aprobados_g} ({aprobados_g / total_gen:.0%})\n"
             f"- ❌ Reprobados: {reprobados_g} ({reprobados_g / total_gen:.0%})\n"

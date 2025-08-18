@@ -12,7 +12,7 @@ def crear_dashboard():
     estado = obtener_estado()
     db = SessionLocal()
 
-    st.markdown("## 📊 Crear nuevo Dashboard")
+    st.markdown("## Crear nuevo Dashboard")
     st.markdown(
         "<p class='subtext'>Carga los archivos oficiales para generar el análisis académico.</p>",
         unsafe_allow_html=True,
@@ -26,7 +26,7 @@ def crear_dashboard():
 
     with st.form("form_dashboard", clear_on_submit=False):
         # === Configuración del Dashboard ===
-        st.markdown("### ✏️ Configuración del Dashboard")
+        st.markdown("### Configuración del Dashboard")
         titulo = st.text_input(
             "Título del Dashboard",
             placeholder="Ej. Análisis y Diseño de Algoritmos — 2025-2",

@@ -18,30 +18,23 @@ with open("app/style.css") as f:
 # === Obtener estado de sesión ===
 estado = obtener_estado()
 
-# === Encabezado institucional ===
-st.markdown(
-    """
-    <div class="header-logos">
-        <img src="app/assets/ipn.png" alt="IPN">
-        <img src="app/assets/escom.png" alt="ESCOM">
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+# === Encabezado institucional (usando st.columns + st.image) ===
+col1, col2, col3 = st.columns([1, 4, 1])
+with col1:
+    st.image("static/ipn.png", width=100)
+with col2:
+    st.markdown("<h2 style='text-align: center;'>📊 Sistema de Aprovechamiento Escolar</h2>", unsafe_allow_html=True)
+with col3:
+    st.image("static/escom.png", width=100)
 
-# === Encabezado principal ===
-st.markdown("## 📊 Sistema de Dashboards Académicos")
-
+# === Contenido principal ===
 if estado["logueado"]:
-    # === Usuario logueado ===
     st.success(f"Bienvenido, **{estado['nombre_usuario']}**")
 
-    # === Redirección si se estableció desde otro módulo ===
     if estado.get("menu"):
         st.session_state["menu_sidebar"] = estado["menu"]
-        estado["menu"] = None  # Reiniciar el estado para futuras vistas
+        estado["menu"] = None
 
-    # === Menú lateral ===
     menu_actual = st.sidebar.radio(
         "Menú",
         ["Crear nuevo dashboard", "Ver dashboards", "Cerrar sesión"],
@@ -61,24 +54,21 @@ if estado["logueado"]:
         st.rerun()
 
 else:
-    # === Usuario no logueado ===
     menu = st.selectbox("Selecciona una opción", ["Iniciar sesión", "Registrarse"])
-
     if menu == "Iniciar sesión":
         mostrar_login()
     else:
         mostrar_registro()
 
-# === Pie de página ===
-st.markdown(
-    """
-    <div class="footer">
-        <div class="header-logos">
-            <img src="app/assets/ipn.png" alt="IPN">
-            <img src="app/assets/escom.png" alt="ESCOM">
-        </div>
-        <p>Sistema de análisis académico - ESCOM IPN<br>Instituto Politécnico Nacional © 2025</p>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+# === Pie de página institucional ===
+st.markdown("---", unsafe_allow_html=True)
+footer1, footer2, footer3 = st.columns([1, 4, 1])
+with footer1:
+    st.image("static/ipn.png", width=80)
+with footer2:
+    st.markdown(
+        "<p style='text-align: center;'>Sistema de análisis académico - ESCOM IPN<br>Instituto Politécnico Nacional © 2025</p>",
+        unsafe_allow_html=True
+    )
+with footer3:
+    st.image("static/escom.png", width=80)
