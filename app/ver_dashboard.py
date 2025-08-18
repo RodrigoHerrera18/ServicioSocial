@@ -13,6 +13,9 @@ def ver_dashboards():
     db = SessionLocal()
 
     st.markdown("## 📋 Dashboards disponibles")
+    if st.button("➕ Crear nuevo dashboard"):
+        estado["menu"] = "Crear nuevo dashboard"
+        st.rerun()
     dashboards = db.query(Dashboard).options(joinedload(Dashboard.materia)).all()
 
     if not dashboards:
