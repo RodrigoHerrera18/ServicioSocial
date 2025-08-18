@@ -1,87 +1,117 @@
 # app/auth.py
-
 import streamlit as st
-import base64
-from pathlib import Path
 from app.db import SessionLocal, Usuario
 from app.utils import hash_password, verificar_password, correo_valido
 from app.session_state import iniciar_sesion
 
+
 def mostrar_login():
     """Pantalla de inicio de sesión con estilo personalizado."""
 
-    def _load_svg(path: str) -> str:
-        """Carga un SVG y lo codifica en base64."""
-        svg_bytes = Path(path).read_bytes()
-        return base64.b64encode(svg_bytes).decode()
-
-    escom_svg = _load_svg("app/assets/escom_logo.svg")
-    ipn_svg = _load_svg("app/assets/ipn_logo.svg")
-
     st.markdown(
-        f"""
+        """
         <style>
-        .stApp {{
-            background-color: #1a237e;
-        }}
-        div.block-container {{
+        .stApp {
+            background-color: #f5f7fe;
+        }
+        div.block-container {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            max-width: 400px;
+            padding: 0;
             background: none;
             box-shadow: none;
-            padding: 0;
-        }}
-        .logo-row {{
+        }
+        .logo-row {
             display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }}
-        .logo-row img {{
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-        }}
-        h1.login-title {{
-            color: #ffffff;
+            gap: 20px;
+        }
+        .logo-placeholder {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            background-color: #6a00c8;
+            color: white;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        h1.login-title {
+            font-size: 1.8rem;
+            color: #1a1a1a;
+            font-weight: bold;
             text-align: center;
-            margin-bottom: 0.2rem;
-        }}
-        p.login-subtitle {{
-            color: rgba(255,255,255,0.7);
+            margin-top: 1rem;
+        }
+        p.login-subtitle {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 2rem;
             text-align: center;
-            margin-bottom: 1.5rem;
-        }}
-        input {{
-            background-color: #ffffff !important;
-        }}
-        div.stButton>button {{
-            background-color: #ffffff !important;
-            color: #1a237e !important;
-            border-radius: 8px !important;
+        }
+        .form-container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
             width: 100%;
-        }}
-        div.stButton>button:hover {{
-            background-color: #e8eaf6 !important;
-        }}
+            max-width: 350px;
+        }
+        .form-container input {
+            width: 100% !important;
+            padding: 0.75rem !important;
+            border-radius: 6px !important;
+            border: 1px solid #ccc !important;
+        }
+        .stButton>button {
+            width: 100%;
+            background-color: #3a007a;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        .stButton>button:hover {
+            background-color: #2e0064;
+        }
+        .admin-link {
+            font-size: 0.9rem;
+            color: #3a007a;
+            text-decoration: underline;
+            text-align: center;
+            margin-top: 1rem;
+            display: block;
+        }
+        .login-footer {
+            font-size: 0.8rem;
+            color: #777;
+            margin-top: 2rem;
+            text-align: center;
+        }
+        @media (max-width: 480px) {
+            .form-container {
+                width: 90%;
+                max-width: 350px;
+            }
+        }
         </style>
         <div class="logo-row">
-            <img src="data:image/svg+xml;base64,{escom_svg}" alt="Logo ESCOM"/>
-            <img src="data:image/svg+xml;base64,{ipn_svg}" alt="Logo IPN"/>
+            <div class="logo-placeholder">IPN</div>
+            <div class="logo-placeholder">ESCOM</div>
         </div>
-        <h1 class="login-title">Inicio de Sesión</h1>
-        <p class="login-subtitle">Sistema de Evaluación Académica — ESCOM / IPN</p>
+        <h1 class="login-title">Sistema Académico</h1>
+        <p class="login-subtitle">Escuela Superior de Cómputo</p>
         """,
         unsafe_allow_html=True,
     )
 
-    correo = st.text_input("Correo electrónico", placeholder="tucorreo@dominio.com")
-    contraseña = st.text_input("Contraseña", type="password")
+    st.markdown('<div class="form-container">', unsafe_allow_html=True)
+    correo = st.text_input("Correo electrónico", placeholder="Correo electrónico")
+    contraseña = st.text_input("Contraseña", type="password", placeholder="Contraseña")
 
     if st.button("Iniciar sesión"):
         if not correo or not contraseña:
@@ -97,6 +127,18 @@ def mostrar_login():
             st.rerun()
         else:
             st.error("❌ Correo o contraseña incorrectos.")
+
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('<a class="admin-link" href="#">Acceso de administrador</a>', unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div class="login-footer">
+            Sistema de análisis académico — ESCOM IPN<br/>
+            Instituto Politécnico Nacional © 2024
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def mostrar_registro():
@@ -134,3 +176,4 @@ def mostrar_registro():
         db.commit()
 
         st.success("✅ Usuario registrado exitosamente. Ahora puedes iniciar sesión.")
+
